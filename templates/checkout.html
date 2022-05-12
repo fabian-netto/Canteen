@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<div class="check_main">
+
+    <div>
+        <div class="check_head">
+            <h1>Place Your Finger Here</h1>
+        </div>
+    </div>
+    
+
+    <div class="head_img">
+        <div class="check_img">
+            <img src="{% static 'images/finger.png'%}">
+        </div>
+    </div>
+    
+    <div class="head_img">
+        <div class="check_img">
+            <a href="{% url 'reciept'%}"></a>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
