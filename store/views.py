@@ -74,42 +74,45 @@ def register(request):
         return render(request,'register.html')
 
 def checkout(request):
-		print("Check fingerprint")
-		import serial.tools.list_ports
+	return render(request, "checkout.html")
+		
+def detail(request):
+	print("Check fingerprint")
+	import serial.tools.list_ports
 
-		currentPort = None
+	currentPort = None
 
-		ports = list(serial.tools.list_ports.comports())
-		# print("port port is", ports[0])
-		for p in ports:
-			print(p.description)
-			if "CP210x" in p.description:
-				currentPort = p
-				break
+	ports = list(serial.tools.list_ports.comports())
+	# print("port port is", ports[0])
+	for p in ports:
+		print(p.description)
+		if "CP210x" in p.description:
+			currentPort = p
+			break
 
-		if currentPort == None:
-			print("No device found")
-			return
-		print("port is", currentPort.device)
+	if currentPort == None:
+		print("No device found")
+		return
+	print("port is", currentPort.device)
 
-		arduino = serial.Serial(port=currentPort.device,
-								baudrate=9600, timeout=.1)
+	arduino = serial.Serial(port=currentPort.device,
+							baudrate=9600, timeout=.1)
 
-		arduino.write(bytes('c', 'utf-8'))
-		arduino.reset_input_buffer()
+	arduino.write(bytes('c', 'utf-8'))
+	arduino.reset_input_buffer()
 
-		while(not arduino.in_waiting):
-			print("waiting...")
-			time.sleep(0.5)
+	while(not arduino.in_waiting):
+		print("waiting...")
+		time.sleep(0.5)
 
-		fingid = arduino.readline().decode('utf-8')
-		print('The detected ID is ', id)
-		arduino.write(bytes('x', 'utf-8'))
+	fingid = arduino.readline().decode('utf-8')
+	print('The detected ID is ', id)
+	arduino.write(bytes('x', 'utf-8'))
 
-		cust = Customer.objects.get(id=fingid)
-		return HttpResponse('name is' +cust.name)	
-		# return render(request, "checkout.html")
-		# return HttpResponse('Figerprint Match Found. ID: '+id)
+	cust = Customer.objects.get(id=fingid)
+	context = {'cust':cust}
+	return render(request, "detail.html",context)
+	# return HttpResponse('Figerprint Match Found. ID: '+id)
 
 def auth_recharge(request):
 	return render(request, 'auth_recharge.html')		
