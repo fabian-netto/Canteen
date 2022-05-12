@@ -1,3 +1,4 @@
+from crypt import methods
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -16,9 +17,9 @@ class Customer(models.Model):
 			name = self.device
 		return str(name)
 
-	@property
-	def get_wal_bal(self):
-		bal = self.get_cart_total - self.amount
+	@methods
+	def get_wal_bal(self,cart):
+		bal = self.amount - cart
 		return bal
 
 class Product(models.Model):

@@ -19,7 +19,7 @@
 					
 					<div style="flex:2"><p>{{cust.name}}</p></div>
 					<div style="flex:1"><p>Rs {{cust.email}}</p></div>
-					<div style="flex:1"><p class="quantity">{{cust.get_wal_bal}}</p></div>
+					<div style="flex:1"><p class="quantity">{{cust.get_wal_bal(order.get_cart_total|floatformat:2)}}</p></div>
 					
 				</div>
 				
