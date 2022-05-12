@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from store.forms import userform
 from .models import *
 from .forms import *
-import serial
+# import serial
 # Create your views here.
 
 def store(request):
@@ -72,3 +72,12 @@ def register(request):
             return HttpResponse('registration incomplte')
     else:
         return render(request,'register.html')
+
+def checkout(request):
+	return render(request, 'checkout.html')		
+
+def auth_recharge(request):
+	return render(request, 'auth_recharge.html')		
+
+def auth_register(request):
+	return render(request, 'auth_register.html')		

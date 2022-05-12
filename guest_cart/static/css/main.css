@@ -68,3 +68,20 @@ h1,h2,h3,h4,h5,h6{
     border-bottom: 1px solid #ececec;
 
 }
+
+.check_main{
+	display: block;
+}
+
+.check_head{
+	text-align: center;
+}
+
+.check_img{
+	align-items: center;
+	display: block;
+}
+
+.head_img{
+	padding: 60px;
+}
