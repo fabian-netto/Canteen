@@ -1,18 +1,6 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block content %}
-<!-- <script>
-    
-    var text = "test successful";
-    $.ajax({
-       type: "POST",
-       url: '{{url 'test-view' }}',
-       data: { csrfmiddlewaretoken: '{{ csrf_token }}', text: text },
-       success: function callback(response){
-                   console.log(response);
-                }
-    });
-</script> -->
 <div class="check_main">
 
     <div class="col-lg-12">
@@ -31,7 +19,7 @@
         
         <div class="head_img">
             <div class="check_img">
-                <a href="{% url 'reciept'%}"></a>
+                <a href="{% url 'detail'%}">Click here if youre ready</a>
             </div>
         </div>
     </div>
