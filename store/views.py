@@ -4,8 +4,8 @@ from django.http import HttpResponse
 from store.forms import userform
 from .models import *
 from .forms import *
-# import serial
-# Create your views here.
+import serial
+import time
 
 def store(request):
 	products = Product.objects.all()
@@ -74,10 +74,57 @@ def register(request):
         return render(request,'register.html')
 
 def checkout(request):
-	return render(request, 'checkout.html')		
+		print("Check fingerprint")
+		import serial.tools.list_ports
+
+		currentPort = None
+
+		ports = list(serial.tools.list_ports.comports())
+		# print("port port is", ports[0])
+		for p in ports:
+			print(p.description)
+			if "CP210x" in p.description:
+				currentPort = p
+				break
+
+		if currentPort == None:
+			print("No device found")
+			return
+		print("port is", currentPort.device)
+
+		arduino = serial.Serial(port=currentPort.device,
+								baudrate=9600, timeout=.1)
+
+		arduino.write(bytes('c', 'utf-8'))
+		arduino.reset_input_buffer()
+
+		while(not arduino.in_waiting):
+			print("waiting...")
+			time.sleep(0.5)
+
+		id = arduino.readline().decode('utf-8')
+		print('The detected ID is ', id)
+		arduino.write(bytes('x', 'utf-8'))
+
+		# return render(request, "checkout.html")
+		return HttpResponse('Figerprint Match Found. ID: '+id)
 
 def auth_recharge(request):
 	return render(request, 'auth_recharge.html')		
 
 def auth_register(request):
 	return render(request, 'auth_register.html')		
+
+def reciept(request):
+	try:
+		customer = request.user.customer
+	except:
+		device = request.COOKIES['device']
+		customer, created = Customer.objects.get_or_create(device=device)
+
+	order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+	context = {'order':order}
+	return render(request, 'reciept.html', context)
+
+    	
