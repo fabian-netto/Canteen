@@ -16,6 +16,10 @@ class Customer(models.Model):
 			name = self.device
 		return str(name)
 
+	@property
+	def get_wal_bal(self):
+		bal = self.get_cart_total - self.amount
+		return bal
 
 class Product(models.Model):
 	name = models.CharField(max_length=200)

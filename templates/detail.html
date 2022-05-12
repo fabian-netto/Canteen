@@ -7,28 +7,20 @@
         <div>
             <div class="box-element">
 				<div class="cart-row">
-					<!-- <div style="flex:2"></div> -->
+					<h1>Thanks for Shopping {{cust.name}}.Your purchase has been sucessfull</h1>
+                    <h3>Rs {{order.get_cart_total|floatformat:2}} Amount debited </h3>
 					<div style="flex:2"><strong>Name</strong></div>
 					<div style="flex:1"><strong>Email</strong></div>
 					<div style="flex:1"><strong>Wallet Balance</strong></div>
-					<!-- <div style="flex:1"><strong>Total</strong></div>
-					<div style="flex:1"><strong>Update</strong></div>
-					<div style="flex:1"><strong>Remove</strong></div> -->
-
+					
 				</div>
 				
 				<div class="cart-row">
-					<!-- <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div> -->
+					
 					<div style="flex:2"><p>{{cust.name}}</p></div>
 					<div style="flex:1"><p>Rs {{cust.email}}</p></div>
-					<div style="flex:1"><p class="quantity">{{cust.amount}}</p></div>
-					<!-- <div style="flex:1"><p>Rs {{item.get_total|floatformat:2}}</p></div>
-					<div style="flex:1">
-						<a class="btn btn-sm btn-dark" href="{% url 'product' item.product.id %}">Update</a>
-					</div>
-					<div style="flex:1">
-						<a class="btn btn-sm btn-danger" href="{% url 'delete_event' item.id%}">Remove</a>
-					</div> -->
+					<div style="flex:1"><p class="quantity">{{cust.get_wal_bal}}</p></div>
+					
 				</div>
 				
 			</div>
