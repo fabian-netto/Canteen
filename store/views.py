@@ -102,12 +102,14 @@ def checkout(request):
 			print("waiting...")
 			time.sleep(0.5)
 
-		id = arduino.readline().decode('utf-8')
+		fingid = arduino.readline().decode('utf-8')
 		print('The detected ID is ', id)
 		arduino.write(bytes('x', 'utf-8'))
 
+		cust = Customer.objects.get(id=fingid)
+		return HttpResponse('name is' +cust.name)	
 		# return render(request, "checkout.html")
-		return HttpResponse('Figerprint Match Found. ID: '+id)
+		# return HttpResponse('Figerprint Match Found. ID: '+id)
 
 def auth_recharge(request):
 	return render(request, 'auth_recharge.html')		
