@@ -122,6 +122,9 @@ def detail(request):
 	context = {'cust':cust,'order':order}
 	return render(request, "detail.html",context)
 	# return HttpResponse('Figerprint Match Found. ID: '+id)
+	
+def detail_recharge(request):
+	return render(request, 'detail_recharge.html')
 
 def auth_recharge(request):
 	return render(request, 'auth_recharge.html')		
