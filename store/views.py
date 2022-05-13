@@ -109,8 +109,17 @@ def detail(request):
 	print('The detected ID is ', id)
 	arduino.write(bytes('x', 'utf-8'))
 
+	try:
+		customer = request.user.customer
+	except:
+		device = request.COOKIES['device']
+		customer, created = Customer.objects.get_or_create(device=device)
+
+	order, created = Order.objects.get_or_create(customer=customer, complete=False)
+
+	
 	cust = Customer.objects.get(id=fingid)
-	context = {'cust':cust}
+	context = {'cust':cust,'order':order}
 	return render(request, "detail.html",context)
 	# return HttpResponse('Figerprint Match Found. ID: '+id)
 
