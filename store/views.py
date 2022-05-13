@@ -47,10 +47,6 @@ def cart(request):
 	return render(request, 'cart.html', context)
 
 def recharge(request):
-	# ser = serial.Serial()
-	# ser.baudrate = 19200 
-	# ser.port = 'COM3'
-	# print(ser)
 	return render(request, 'recharge.html')
 
 def delete_event(request, pk):

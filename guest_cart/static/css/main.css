@@ -65,7 +65,14 @@ h1,h2,h3,h4,h5,h6{
     border-bottom: 1px solid #ececec;
 
 }
-
+.hd-txt h2{
+	font-family: 'Roboto', sans-serif;
+	font-size: 28px;
+	font-weight: 600;
+	text-transform: capitalize;
+	color:#fff;
+	margin: 0px 0px 20px 0px;
+}
 .head_img{
 	display: block;
 	text-align: center;
