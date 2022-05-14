@@ -49,17 +49,19 @@ def cart(request):
 	return render(request, 'cart.html', context)
 
 def recharge(request):
-	if request.method == 'POST':
+	if request.POST:
 		fingid = 1
-		a = rechargeform(request.POST)
-		if a.is_valid():
-			amount = a.cleaned_data['numb']
-			# b = Customer(numb= amount)
-			# b.save()
-			c = Customer.objects.get(id=fingid)
-			d = c.amount + amount
-			f = Customer.objects.update(amount=d)
-			f.save()
+		numb = request.POST['numb']
+		print(numb)
+		
+
+		c = Customer.objects.get(id=fingid)
+		
+		c.amount = c.amount + int(numb)
+		c.save()
+
+		return redirect(auth_recharge)
+		
 	return render(request, 'recharge.html')
 
 def delete_event(request, pk):
@@ -136,6 +138,7 @@ def detail_recharge(request):
 	return render(request, 'detail_recharge.html')
 
 def auth_recharge(request):
+	
 	return render(request, 'auth_recharge.html')		
 
 def auth_register(request):
