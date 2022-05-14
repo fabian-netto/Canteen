@@ -1,5 +1,7 @@
+from re import A, template
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.template import loader
 
 from store.forms import userform
 from .models import *
@@ -123,6 +125,13 @@ def detail_recharge(request):
 	return render(request, 'detail_recharge.html')
 
 def auth_recharge(request):
+	if request.method == 'POST':
+		a = rechargeform(request.POST)
+		if a.is_valid():
+			amount = a.cleaned_data['numb']
+			b = Customer(numb= amount)
+			b.save()
+			c = Customer.objects.get(id=fingid)
 	return render(request, 'auth_recharge.html')		
 
 def auth_register(request):
