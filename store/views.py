@@ -1,4 +1,7 @@
+from cgi import print_form
+import email
 from re import A, template
+from unicodedata import name
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
@@ -68,21 +71,6 @@ def delete_event(request, pk):
 	ord = OrderItem.objects.get(id=pk)
 	ord.delete()
 	return redirect('cart')
-
-def register(request):
-    if request.method == 'POST':
-        a=userform(request.POST)
-        if a.is_valid():
-            name=a.cleaned_data['name']
-            email=a.cleaned_data['email']
-           
-            b=Customer(name=name,email=email)
-            b.save()
-            return redirect(store)
-        else:
-            return HttpResponse('registration incomplte')
-    else:
-        return render(request,'register.html')
 
 def checkout(request):
 	return render(request, "checkout.html")
@@ -156,4 +144,17 @@ def reciept(request):
 	context = {'order':order}
 	return render(request, 'reciept.html', context)
 
-    	
+def register(request):
+	if request.POST:
+		fingid= 1
+		name = request.POST['name']
+		email = request.POST['email']
+		print(name,email)
+
+		c = Customer.objects.get(id=fingid)   	
+		c.name = name
+		c.email = email
+		c.save()
+
+		return redirect(auth_register)
+	return render(request, 'register.html')
