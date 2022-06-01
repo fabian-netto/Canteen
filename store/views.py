@@ -12,149 +12,169 @@ from .forms import *
 import serial
 import time
 
+
 def store(request):
-	products = Product.objects.all()
-	context = {'products':products}
-	return render(request, 'store.html', context)
+    products = Product.objects.all()
+    context = {'products': products}
+    return render(request, 'store.html', context)
+
 
 def product(request, pk):
-	product = Product.objects.get(id=pk)
 
-	if request.method == 'POST':
-		product = Product.objects.get(id=pk)
-		#Get user account information
-		try:
-			customer = request.user.customer	
-		except:
-			device = request.COOKIES['device']
-			customer, created = Customer.objects.get_or_create(device=device)
+    product = Product.objects.get(id=pk)
 
-		order, created = Order.objects.get_or_create(customer=customer, complete=False)
-		orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
-		orderItem.quantity=request.POST['quantity']
-		orderItem.save()
+    if request.method == 'POST':
+        product = Product.objects.get(id=pk)
+        # Get user account information
+        try:
+            customer = request.user.customer
+        except:
+            device = request.COOKIES['device']
+            customer, created = Customer.objects.get_or_create(device=device)
 
-		return redirect('cart')
+        order, created = Order.objects.get_or_create(
+            customer=customer, complete=False)
+        orderItem, created = OrderItem.objects.get_or_create(
+            order=order, product=product)
+        orderItem.quantity = request.POST['quantity']
+        orderItem.save()
 
-	context = {'product':product}
-	return render(request, 'product.html', context)
+        return redirect('cart')
+
+    context = {'product': product}
+    return render(request, 'product.html', context)
+
 
 def cart(request):
-	try:
-		customer = request.user.customer
-	except:
-		device = request.COOKIES['device']
-		customer, created = Customer.objects.get_or_create(device=device)
+    try:
+        customer = request.user.customer
+    except:
+        device = request.COOKIES['device']
+        customer, created = Customer.objects.get_or_create(device=device)
 
-	order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False)
 
-	context = {'order':order}
-	return render(request, 'cart.html', context)
+    context = {'order': order}
+    return render(request, 'cart.html', context)
+
 
 def recharge(request):
-	if request.POST:
-		fingid = 1
-		numb = request.POST['numb']
-		print(numb)
-		
+    if request.POST:
+        fingid = 1
+        numb = request.POST['numb']
+        print(numb)
 
-		c = Customer.objects.get(id=fingid)
-		
-		c.amount = c.amount + int(numb)
-		c.save()
+        c = Customer.objects.get(id=fingid)
 
-		return redirect(auth_recharge)
-		
-	return render(request, 'recharge.html')
+        c.amount = c.amount + int(numb)
+        c.save()
+
+        return redirect(auth_recharge)
+
+    return render(request, 'recharge.html')
+
 
 def delete_event(request, pk):
-	ord = OrderItem.objects.get(id=pk)
-	ord.delete()
-	return redirect('cart')
+    ord = OrderItem.objects.get(id=pk)
+    ord.delete()
+    return redirect('cart')
+
 
 def checkout(request):
-	return render(request, "checkout.html")
-		
+    return render(request, "checkout.html")
+
+
 def detail(request):
-	print("Check fingerprint")
-	import serial.tools.list_ports
+    print("Check fingerprint")
+    import serial.tools.list_ports
 
-	currentPort = None
+    currentPort = None
 
-	ports = list(serial.tools.list_ports.comports())
-	# print("port port is", ports[0])
-	for p in ports:
-		print(p.description)
-		if "CP210x" in p.description:
-			currentPort = p
-			break
+    ports = list(serial.tools.list_ports.comports())
+    # print("port port is", ports[0])
+    for p in ports:
+        print(p.description)
+        if "CP210x" in p.description:
+            currentPort = p
+            break
 
-	if currentPort == None:
-		print("No device found")
-		return
-	print("port is", currentPort.device)
+    if currentPort == None:
+        print("No device found")
+        return
+    print("port is", currentPort.device)
 
-	arduino = serial.Serial(port=currentPort.device,
-							baudrate=9600, timeout=.1)
+    arduino = serial.Serial(port=currentPort.device,
+                            baudrate=9600, timeout=.1)
 
-	arduino.write(bytes('c', 'utf-8'))
-	arduino.reset_input_buffer()
+    arduino.write(bytes('c', 'utf-8'))
+    arduino.reset_input_buffer()
 
-	while(not arduino.in_waiting):
-		print("waiting...")
-		time.sleep(0.5)
+    while(not arduino.in_waiting):
+        print("waiting...")
+        time.sleep(0.5)
 
-	fingid = arduino.readline().decode('utf-8')
-	print('The detected ID is ', id)
-	arduino.write(bytes('x', 'utf-8'))
+    fingid = arduino.readline().decode('utf-8')
+    print('The detected ID is ', fingid)
+    arduino.write(bytes('x', 'utf-8'))
 
-	try:
-		customer = request.user.customer
-	except:
-		device = request.COOKIES['device']
-		customer, created = Customer.objects.get_or_create(device=device)
+    try:
+        customer = request.user.customer
+    except:
+        device = request.COOKIES['device']
+        customer, created = Customer.objects.get_or_create(device=device)
 
-	order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False)
 
-	
-	cust = Customer.objects.get(id=fingid)
-	context = {'cust':cust,'order':order}
-	return render(request, "detail.html",context)
-	# return HttpResponse('Figerprint Match Found. ID: '+id)
-	
+    cust = Customer.objects.get(id=fingid)
+    cust.amount = cust.amount - order.get_cart_total
+    cust.save()
+
+    context = {'cust': cust, 'order': order}
+
+    return render(request, "detail.html", context)
+    # return HttpResponse('Figerprint Match Found. ID: '+id)
+
+
 def detail_recharge(request):
-	return render(request, 'detail_recharge.html')
+    return render(request, 'detail_recharge.html')
+
 
 def auth_recharge(request):
-	
-	return render(request, 'auth_recharge.html')		
+
+    return render(request, 'auth_recharge.html')
+
 
 def auth_register(request):
-	return render(request, 'auth_register.html')		
+    return render(request, 'auth_register.html')
+
 
 def reciept(request):
-	try:
-		customer = request.user.customer
-	except:
-		device = request.COOKIES['device']
-		customer, created = Customer.objects.get_or_create(device=device)
+    try:
+        customer = request.user.customer
+    except:
+        device = request.COOKIES['device']
+        customer, created = Customer.objects.get_or_create(device=device)
 
-	order, created = Order.objects.get_or_create(customer=customer, complete=False)
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False)
 
-	context = {'order':order}
-	return render(request, 'reciept.html', context)
+    context = {'order': order}
+    return render(request, 'reciept.html', context)
+
 
 def register(request):
-	if request.POST:
-		fingid= 1
-		name = request.POST['name']
-		email = request.POST['email']
-		print(name,email)
+    if request.POST:
+        fingid = 1
+        name = request.POST['name']
+        email = request.POST['email']
+        print(name, email)
 
-		c = Customer.objects.get(id=fingid)   	
-		c.name = name
-		c.email = email
-		c.save()
+        c = Customer.objects.get(id=fingid)
+        c.name = name
+        c.email = email
+        c.save()
 
-		return redirect(auth_register)
-	return render(request, 'register.html')
+        return redirect(auth_register)
+    return render(request, 'register.html')
