@@ -1,6 +1,7 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block content %}
+
 <div class="check_main">
 
     <div class="head_img">
@@ -8,9 +9,20 @@
         <div class="check_img">
             <img src="{% static 'images/finger.png'%}" class="img-fluid">
         </div>
-            <a href="{% url 'detail'%}" class="btn btn-primary bg-dark">Click here if youre ready</a>
+            <a href="{% url 'detail'%}" class="btn btn-primary bg-dark " style="display:none" id="activate">Click here if youre ready</a>
         </div>
     </div>
     
 </div>
+<script
+			  src="https://code.jquery.com/jquery-1.12.4.min.js"
+			  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+			  crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function(){
+        $('#activate')[0].click();
+      });
+    
+</script>
 {% endblock content %}

@@ -1,10 +1,12 @@
 from cgi import print_form
 import email
+from logging import exception
 from re import A, template
 from unicodedata import name
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
+from store.device_functions import check_finger_return_id
 
 from store.forms import userform
 from .models import *
@@ -86,37 +88,18 @@ def checkout(request):
 
 
 def detail(request):
-    print("Check fingerprint")
-    import serial.tools.list_ports
+    fingid = check_finger_return_id('c')
 
-    currentPort = None
+    # TODO:All the error cases from the function and the associated error pages
+    switcher = {
+        -1: HttpResponse("User not found"),
+        -2: HttpResponse("Device not found"),
+        -3: HttpResponse("Device busy"),
+        -4: HttpResponse("Timeout")
+    }
 
-    ports = list(serial.tools.list_ports.comports())
-    # print("port port is", ports[0])
-    for p in ports:
-        print(p.description)
-        if "CP210x" in p.description:
-            currentPort = p
-            break
-
-    if currentPort == None:
-        print("No device found")
-        return
-    print("port is", currentPort.device)
-
-    arduino = serial.Serial(port=currentPort.device,
-                            baudrate=9600, timeout=.1)
-
-    arduino.write(bytes('c', 'utf-8'))
-    arduino.reset_input_buffer()
-
-    while(not arduino.in_waiting):
-        print("waiting...")
-        time.sleep(0.5)
-
-    fingid = arduino.readline().decode('utf-8')
-    print('The detected ID is ', fingid)
-    arduino.write(bytes('x', 'utf-8'))
+    if(int(fingid) < 0):
+        return switcher.get(fingid, HttpResponse("Error"))
 
     try:
         customer = request.user.customer
@@ -128,10 +111,18 @@ def detail(request):
         customer=customer, complete=False)
 
     cust = Customer.objects.get(id=fingid)
+
+    if(cust.amount - order.get_cart_total < 0):
+        # TODO: This condition
+        return HttpResponse("Insufficient balance. Recharge your wallet")
+
     cust.amount = cust.amount - order.get_cart_total
     cust.save()
 
-    context = {'cust': cust, 'order': order}
+    cart_total = order.get_cart_total
+    order.delete()
+
+    context = {'cust': cust, 'cart_total': cart_total}
 
     return render(request, "detail.html", context)
     # return HttpResponse('Figerprint Match Found. ID: '+id)
