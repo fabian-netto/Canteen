@@ -1,4 +1,3 @@
-from crypt import methods
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -16,11 +15,6 @@ class Customer(models.Model):
 		else:
 			name = self.device
 		return str(name)
-
-	@methods
-	def get_wal_bal(self,cart):
-		bal = self.amount - cart
-		return bal
 
 class Product(models.Model):
 	name = models.CharField(max_length=200)
