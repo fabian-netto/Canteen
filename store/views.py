@@ -7,7 +7,7 @@ from unicodedata import name
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
-from store.device_functions import check_finger_return_id
+from store.device_functions import check_finger_return_id, enroll_finger_with_id
 
 from store.forms import userform
 from .models import *
@@ -180,11 +180,6 @@ def register(request):
         email = request.POST['email']
         print(name, email)
 
-        # c = Customer.objects.get(id=fingid)
-        # c.name = name
-        # c.email = email
-        # c.save()
-
         return redirect(auth_register)
     return render(request, 'register.html')
 
@@ -207,3 +202,32 @@ def timeout(request):
 
 def insuff_bal(request):
     return render(request, 'insuff_bal.html')
+
+
+def registration_success(request):
+    latestId = Customer.objects.latest('id').id
+    fingId = latestId+1
+
+    global name
+    global email
+
+    success = enroll_finger_with_id(fingId)
+
+    switcher = {
+        -1: redirect(user_not),
+        -2: redirect(device_not),
+        -3: redirect(device_busy),
+        -4: redirect(timeout)
+    }
+
+    if(success < 0):
+        return switcher.get(success, HttpResponse("Error"))
+
+    print(str(success) + "<-success")
+
+    if(success == 1):
+        print("success is"+str(success) + name + email)
+        c = Customer(name=name, email=email, amount=0, id=fingId)
+        c.save()
+
+    return render(request, 'registration_successful.html')

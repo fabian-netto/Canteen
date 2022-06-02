@@ -82,7 +82,25 @@ def enroll_finger_with_id(fingId):
             break
 
     arduino.write(bytes('e', 'utf-8'))
+    time.sleep(1)
+    arduino.write(bytes(str(fingId), 'utf-8'))
     arduino.reset_input_buffer()
-    time.sleep(0.5)
-    arduino.write(bytes(fingId, 'utf-8'))
+
+    waiting_counter = 0
+
+    while(not arduino.in_waiting):
+        print("waiting...")
+        waiting_counter = waiting_counter+1
+        time.sleep(0.5)
+        if(waiting_counter > 60):
+            return -4
+
+    success = arduino.readline().decode('utf-8')
+
+    print(success)
+
+    print(int(success))
+
+    if(int(success) == 1):
+        return 1
     return 0
