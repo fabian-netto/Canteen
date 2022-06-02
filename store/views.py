@@ -65,29 +65,12 @@ def cart(request):
 def recharge(request):
 
     if request.POST:
-        # fingid = check_finger_return_id('c')
-        # # TODO:All the error cases from the function and the associated error pages
-        # switcher = {
-        #     -1: HttpResponse("User not found"),
-        #     -2: HttpResponse("Device not found"),
-        #     -3: HttpResponse("Device busy"),
-        #     -4: HttpResponse("Timeout")
-        # }
-
-        # if(int(fingid) < 0):
-        #     return switcher.get(fingid, HttpResponse("Error"))
+        global numb
 
         numb = request.POST['numb']
         print(numb)
 
-        # c = Customer.objects.get(id=fingid)
-
-        # c.amount = c.amount + int(numb)
-        # c.save()
-
-        auth_recharge(request, numb)
-
-        auth_recharge(request, numb)
+        return redirect(auth_recharge)
 
     return render(request, 'recharge.html')
 
@@ -144,15 +127,32 @@ def detail(request):
 
 
 def detail_recharge(request):
+    fingid = check_finger_return_id('c')
+    # TODO:All the error cases from the function and the associated error pages
+    switcher = {
+        -1: redirect(user_not),
+        -2: redirect(device_not),
+        -3: redirect(device_busy),
+        -4: redirect(timeout)
+    }
+
+    if(int(fingid) < 0):
+        return switcher.get(fingid, HttpResponse("Error"))
+
+    c = Customer.objects.get(id=fingid)
+
+    c.amount = c.amount + int(numb)
+    c.save()
+
     return render(request, 'detail_recharge.html')
 
 
-def auth_recharge(request, numb):
-    print(numb)
+def auth_recharge(request):
     return render(request, 'auth_recharge.html')
 
 
 def auth_register(request):
+
     return render(request, 'auth_register.html')
 
 
@@ -173,14 +173,17 @@ def reciept(request):
 def register(request):
     if request.POST:
         fingid = 1
+        global name
+        global email
+
         name = request.POST['name']
         email = request.POST['email']
         print(name, email)
 
-        c = Customer.objects.get(id=fingid)
-        c.name = name
-        c.email = email
-        c.save()
+        # c = Customer.objects.get(id=fingid)
+        # c.name = name
+        # c.email = email
+        # c.save()
 
         return redirect(auth_register)
     return render(request, 'register.html')
