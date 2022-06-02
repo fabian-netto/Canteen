@@ -1,6 +1,8 @@
-{% extends 'main.html' %} {% load static %} {% block content %}
+{% extends 'main.html' %} 
+{% load static %}
+{% block content %}
 
-<div>
+<!-- <div>
   <div>
     <div>
       <div class="box-element">
@@ -25,6 +27,40 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
+<div class="base-bar">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="dp-box">
+        <h2>Thanks for Shopping {{cust.name}} Your Purchase Has been Successfull</h2>
+      </div>	
+    </div>
+    <div class="col-md-12">
+      <div class="dp-box">
+        <h3>Rs {{cart_total|floatformat:2}} Amount Credited </h3>
+      </div>	
+    </div>
+    
+    <div class="col-md-4">
+      <div class="dp-box">
+        <h3>Name</h3>
+        <p>{{cust.name}}</p>
+      </div>	
+    </div>
+    <div class="col-md-4">
+      <div class="dp-box">
+        <h3>E-mail id</h3>
+        <p>Rs {{cust.email}}</p>
+      </div>	
+    </div>
+    <div class="col-md-4">
+      <div class="dp-box">
+        <h3>wallet balance</h3>
+        <p class="quantity">{{cust.amount}}</p>
+      </div>	
+    </div>
+  </div>			
+  </div>
+</div>
 {% endblock content %}
