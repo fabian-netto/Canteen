@@ -69,12 +69,12 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="dp-box">
-					<h2>Thanks for Rechraging {{cust.name}}.Your Recharge Has been Successfull</h2>
+					<h2>Thanks for Recharging {{cust.name}}.Your Recharge Has been Successful</h2>
 				</div>	
 			</div>
 			<div class="col-md-12">
 				<div class="dp-box">
-					<h3>Rs {{order.get_cart_total|floatformat:2}} Amount Credited </h3>
+					<h3>Rs {{numb|floatformat:2}} Amount Credited </h3>
 				</div>	
 			</div>
 			
@@ -87,17 +87,30 @@
 			<div class="col-md-4">
 				<div class="dp-box">
 					<h3>E-mail id</h3>
-					<p>Rs {{cust.email}}</p>
+					<p>{{cust.email}}</p>
 				</div>	
 			</div>
 			<div class="col-md-4">
 				<div class="dp-box">
 					<h3>wallet balance</h3>
-					<p class="quantity">{{cust.amount}}</p>
+					<p class="quantity">₹ {{cust.amount}}</p>
 				</div>	
 			</div>
 		</div>			
     </div>
+	<form method="POST">
+		{% csrf_token %}
+		<center>
+			<button
+			type="submit"
+			class="btn btn-primary btn-block mb-4"
+			>
+	  Back To Home
+	</button>
+		</center>
+	  </form>
 </div>
+
+
 
 {% endblock content %}

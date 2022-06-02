@@ -1,4 +1,90 @@
-<html>
-  Rego Successfull
-  <br />
-</html>
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<style>
+.base-bar{
+	width:100%; 
+	background-color: #f7f7f7; 
+	min-height: 200px; 
+	display: flex;
+}
+.base-bar{
+	width:100%; 
+	background-color: #f7f7f7; 
+	min-height: 200px; 
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+}
+.dp-box{
+	min-height: 100px;
+	padding: 10px 20px;
+	border-bottom: solid 1px rgba(0,0,0,.38);
+}
+.dp-box h2{
+	font-size: 28px;
+	font-family: 'Roboto', sans-serif;
+	color:#2a2a2a;
+}
+.dp-box h3{
+	font-family: 'Roboto', sans-serif;
+	font-size: 18px;
+	text-transform: uppercase;
+	color:black;
+	font-weight: bold;
+	margin:0px 0px 15px 0px;
+}
+.dp-box p{
+	font-family: 'Roboto', sans-serif;
+	font-size: 14px;
+	text-transform: uppercase;
+	color:#2a2a2a;
+	font-weight: bold;
+}
+</style>
+   
+	<div class="base-bar">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="dp-box">
+					<h2>Thanks for Registering {{cust.name}}.Your Registration Has been Successful</h2>
+				</div>	
+			</div>
+			
+			<div class="col-md-4">
+				<div class="dp-box">
+					<h3>Name</h3>
+					<p>{{cust.name}}</p>
+				</div>	
+			</div>
+			<div class="col-md-4">
+				<div class="dp-box">
+					<h3>E-mail id</h3>
+					<p>{{cust.email}}</p>
+				</div>	
+			</div>
+			<div class="col-md-4">
+				<div class="dp-box">
+					<h3>wallet balance</h3>
+					<p class="quantity">₹ {{cust.amount}}</p>
+				</div>	
+			</div>
+		</div>			
+    </div>
+	<form method="POST">
+		{% csrf_token %}
+		<center>
+			<button
+			type="submit"
+			class="btn btn-primary btn-block mb-4"
+			>
+	  Back To Home
+	</button>
+		</center>
+	  </form>
+</div>
+
+
+
+{% endblock content %}

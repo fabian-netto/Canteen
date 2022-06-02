@@ -17,6 +17,11 @@ urlpatterns = [
     path('insuff_bal/', views.insuff_bal, name="insuff_bal"),
     path('payment/', views.payment, name="payment"),
 
+    path('recharge_timeout/', views.recharge_timeout, name="recharge_timeout"),
+    path('register_timeout/', views.register_timeout,
+         name="register_timeout"),
+
+
     path('register/', views.register, name="register"),
     path('auth_register/', views.auth_register, name="auth_register"),
     path('registration_success/', views.registration_success,

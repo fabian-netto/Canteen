@@ -126,7 +126,11 @@ def detail(request):
 
 
 def detail_recharge(request):
-    return render(request, 'detail_recharge.html')
+    if request.POST:
+        return redirect('store')
+    cust = Customer.objects.get(id=rechargeFingId)
+    context = {'cust': cust, 'numb': numb}
+    return render(request, 'detail_recharge.html', context)
 
 
 def auth_recharge(request):
@@ -140,11 +144,14 @@ def payment(request):
         -1: redirect(user_not),
         -2: redirect(device_not),
         -3: redirect(device_busy),
-        -4: redirect(timeout)
+        -4: redirect(recharge_timeout)
     }
 
     if(int(fingid) < 0):
         return switcher.get(fingid, HttpResponse("Error"))
+
+    global rechargeFingId
+    rechargeFingId = fingid
 
     c = Customer.objects.get(id=fingid)
 
@@ -207,11 +214,22 @@ def timeout(request):
     return render(request, 'timeout.html')
 
 
+def recharge_timeout(request):
+    return render(request, 'recharge_timeout.html')
+
+
+def register_timeout(request):
+    return render(request, 'register_timeout.html')
+
+
 def insuff_bal(request):
     return render(request, 'insuff_bal.html')
 
 
 def registration_success(request):
+    if request.POST:
+        return redirect('store')
+
     latestId = Customer.objects.latest('id').id
     fingId = latestId+1
 
@@ -224,7 +242,7 @@ def registration_success(request):
         -1: redirect(user_not),
         -2: redirect(device_not),
         -3: redirect(device_busy),
-        -4: redirect(timeout)
+        -4: redirect(register_timeout)
     }
 
     if(success < 0):
@@ -237,4 +255,6 @@ def registration_success(request):
         c = Customer(name=name, email=email, amount=0, id=fingId)
         c.save()
 
-    return render(request, 'registration_successful.html')
+    context = {"cust": c}
+
+    return render(request, 'registration_successful.html', context)
