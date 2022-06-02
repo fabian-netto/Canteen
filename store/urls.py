@@ -10,6 +10,11 @@ urlpatterns = [
 	path('auth_recharge/', views.auth_recharge, name="auth_recharge"),
 	path('detail_recharge/', views.detail_recharge, name="detail_recharge"),
 
+	path('user_not/', views.user_not, name="user_not"),
+	path('device_not/', views.device_not, name="device_not"),
+	path('device_busy/', views.device_busy, name="device_busy"),
+	path('timeout/', views.timeout, name="timeout"),
+	path('insuff_bal/', views.insuff_bal, name="insuff_bal"),
 
 	path('register/', views.register, name="register"),
 	path('auth_register/', views.auth_register, name="auth_register"),

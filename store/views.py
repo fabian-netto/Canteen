@@ -2,6 +2,7 @@ from cgi import print_form
 import email
 from logging import exception
 from re import A, template
+import re
 from unicodedata import name
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -86,7 +87,7 @@ def recharge(request):
 
         auth_recharge(request, numb)
 
-        return redirect(auth_recharge)
+        auth_recharge(request, numb)
 
     return render(request, 'recharge.html')
 
@@ -106,10 +107,10 @@ def detail(request):
 
     # TODO:All the error cases from the function and the associated error pages
     switcher = {
-        -1: HttpResponse("User not found"),
-        -2: HttpResponse("Device not found"),
-        -3: HttpResponse("Device busy"),
-        -4: HttpResponse("Timeout")
+        -1: redirect(user_not),
+        -2: redirect(device_not),
+        -3: redirect(device_busy),
+        -4: redirect(timeout)
     }
 
     if(fingid < 0):
@@ -128,7 +129,7 @@ def detail(request):
 
     if(cust.amount - order.get_cart_total < 0):
         # TODO: This condition
-        return HttpResponse("Insufficient balance. Recharge your wallet")
+        return redirect(insuff_bal)
 
     cust.amount = cust.amount - order.get_cart_total
     cust.save()
@@ -147,8 +148,7 @@ def detail_recharge(request):
 
 
 def auth_recharge(request, numb):
-    print("Recharge amont is" + numb)
-
+    print(numb)
     return render(request, 'auth_recharge.html')
 
 
@@ -184,3 +184,23 @@ def register(request):
 
         return redirect(auth_register)
     return render(request, 'register.html')
+
+
+def user_not(request):
+    return render(request, 'user_not.html')
+
+
+def device_not(request):
+    return render(request, 'device_not.html')
+
+
+def device_busy(request):
+    return render(request, 'device_busy.html')
+
+
+def timeout(request):
+    return render(request, 'timeout.html')
+
+
+def insuff_bal(request):
+    return render(request, 'insuff_bal.html')
