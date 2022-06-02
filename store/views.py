@@ -118,7 +118,6 @@ def detail(request):
     cust.save()
 
     cart_total = order.get_cart_total
-    order.delete()
 
     context = {'cust': cust, 'cart_total': cart_total}
 
@@ -127,6 +126,14 @@ def detail(request):
 
 
 def detail_recharge(request):
+    return render(request, 'detail_recharge.html')
+
+
+def auth_recharge(request):
+    return render(request, 'auth_recharge.html')
+
+
+def payment(request):
     fingid = check_finger_return_id('c')
     # TODO:All the error cases from the function and the associated error pages
     switcher = {
@@ -143,12 +150,7 @@ def detail_recharge(request):
 
     c.amount = c.amount + int(numb)
     c.save()
-
-    return render(request, 'detail_recharge.html')
-
-
-def auth_recharge(request):
-    return render(request, 'auth_recharge.html')
+    return render(request, 'payment.html')
 
 
 def auth_register(request):
@@ -157,6 +159,7 @@ def auth_register(request):
 
 
 def reciept(request):
+
     try:
         customer = request.user.customer
     except:
@@ -165,6 +168,10 @@ def reciept(request):
 
     order, created = Order.objects.get_or_create(
         customer=customer, complete=False)
+
+    if request.POST:
+        order.delete()
+        return redirect('store')
 
     context = {'order': order}
     return render(request, 'reciept.html', context)
