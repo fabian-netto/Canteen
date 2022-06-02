@@ -1,31 +1,30 @@
-{% extends 'main.html' %}
-{% load static %}
-{% block content %}
+{% extends 'main.html' %} {% load static %} {% block content %}
 
 <div>
+  <div>
     <div>
-        <div>
-            <div class="box-element">
-				<div class="cart-row">
-					<h1>Thanks for Shopping {{cust.name}}.Your purchase has been sucessfull</h1>
-                    <h3>Rs {{order.get_cart_total|floatformat:2}} Amount debited </h3>
-					<div style="flex:2"><strong>Name</strong></div>
-					<div style="flex:1"><strong>Email</strong></div>
-					<div style="flex:1"><strong>Wallet Balance</strong></div>
-					
-				</div>
-				
-				<div class="cart-row">
-					
-					<div style="flex:2"><p>{{cust.name}}</p></div>
-					<div style="flex:1"><p>Rs {{cust.email}}</p></div>
-					<div style="flex:1"><p class="quantity">{{cust.amount}}</p></div>
-					
-				</div>
-				
-			</div>
+      <div class="box-element">
+        <div class="cart-row">
+          <h1>
+            Thanks for Shopping {{cust.name}}<br />Your purchase has been
+            sucessfully completed.
+          </h1>
+          <h3>Rs {{cart_total|floatformat:2}} Amount debited</h3>
+          <div style="flex: 2"><strong>Name</strong></div>
+          <div style="flex: 1"><strong>Email</strong></div>
+          <div style="flex: 1"><strong>Wallet Balance</strong></div>
         </div>
+
+        <div class="cart-row">
+          <div style="flex: 2"><p>{{cust.name}}</p></div>
+          <div style="flex: 1"><p>{{cust.email}}</p></div>
+          <div style="flex: 1">
+            <p class="quantity">{{cust.amount}}</p>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 {% endblock content %}
