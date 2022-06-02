@@ -134,7 +134,6 @@ def detail_recharge(request):
 
 
 def auth_recharge(request, numb):
-	print(numb)
 	return render(request, 'auth_recharge.html')
 
 
@@ -185,3 +184,6 @@ def timeout(request):
 
 def insuff_bal(request):
 	return render(request, 'insuff_bal.html')	
+
+def payment(request):
+	return render(request, 'payment.html')
