@@ -15,6 +15,7 @@ urlpatterns = [
     path('device_busy/', views.device_busy, name="device_busy"),
     path('timeout/', views.timeout, name="timeout"),
     path('insuff_bal/', views.insuff_bal, name="insuff_bal"),
+    path('payment/', views.payment, name="payment"),
 
     path('register/', views.register, name="register"),
     path('auth_register/', views.auth_register, name="auth_register"),
