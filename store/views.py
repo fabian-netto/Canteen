@@ -62,15 +62,29 @@ def cart(request):
 
 
 def recharge(request):
+
     if request.POST:
-        fingid = 1
+        # fingid = check_finger_return_id('c')
+        # # TODO:All the error cases from the function and the associated error pages
+        # switcher = {
+        #     -1: HttpResponse("User not found"),
+        #     -2: HttpResponse("Device not found"),
+        #     -3: HttpResponse("Device busy"),
+        #     -4: HttpResponse("Timeout")
+        # }
+
+        # if(int(fingid) < 0):
+        #     return switcher.get(fingid, HttpResponse("Error"))
+
         numb = request.POST['numb']
         print(numb)
 
-        c = Customer.objects.get(id=fingid)
+        # c = Customer.objects.get(id=fingid)
 
-        c.amount = c.amount + int(numb)
-        c.save()
+        # c.amount = c.amount + int(numb)
+        # c.save()
+
+        auth_recharge(request, numb)
 
         return redirect(auth_recharge)
 
@@ -98,7 +112,7 @@ def detail(request):
         -4: HttpResponse("Timeout")
     }
 
-    if(int(fingid) < 0):
+    if(fingid < 0):
         return switcher.get(fingid, HttpResponse("Error"))
 
     try:
@@ -132,7 +146,8 @@ def detail_recharge(request):
     return render(request, 'detail_recharge.html')
 
 
-def auth_recharge(request):
+def auth_recharge(request, numb):
+    print("Recharge amont is" + numb)
 
     return render(request, 'auth_recharge.html')
 

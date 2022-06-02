@@ -50,4 +50,4 @@ def check_finger_return_id(send_char):
     print('The detected ID is ', fingid)
     arduino.write(bytes('x', 'utf-8'))
 
-    return fingid
+    return int(fingid)
